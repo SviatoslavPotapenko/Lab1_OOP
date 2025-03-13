@@ -8,10 +8,11 @@ struct Price {
     short int kopecks;
 };
 
-Price createPrice(int h = 0, int k = 0);
-Price addPrices(const Price& a, const Price& b);
-Price multiplyPrice(const Price& price, int quantity);
-void roundPrice(Price& price);
-Price calculateTotalPrice(const std::string& filename);
+void createPrice(int h, int k, int& hryvnias, short& kopecks);
+void addPrices(int a_h, short a_k, int b_h, short b_k, int& result_h, short& result_k);
+void multiplyPrice(int h, short k, int quantity, int& result_h, short& result_k);
+void roundPrice(int& hryvnias, short& kopecks);
+void calculateTotalPrice(const std::string& filename, int& hryvnias, short& kopecks);
+
 
 #endif // LAB1_H
