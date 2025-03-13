@@ -1,13 +1,25 @@
-#include "lab1.h"
 #include <iostream>
+#include <string>
+
+// Оголошення функцій
+void calculateTotalPrice(const std::string& filename, int& hryvnias, short& kopecks);
+void roundPrice(int& hryvnias, short& kopecks);
 
 int main() {
-    Price total = calculateTotalPrice("prices.txt");
-    Price rounded_total = total;
-    roundPrice(rounded_total);
+    int hryvnias;
+    short kopecks;
 
-    std::cout << "Загальна сума: " << total.hryvnias << " грн " << total.kopecks << " коп" << std::endl;
-    std::cout << "Сума до оплати (з округленням): " << rounded_total.hryvnias << " грн " << rounded_total.kopecks << " коп" << std::endl;
+    // Обчислення загальної вартості
+    calculateTotalPrice("prices.txt", hryvnias, kopecks);
+
+    // Вивід загальної суми
+    std::cout << "Загальна сума: " << hryvnias << " грн " << kopecks << " коп." << std::endl;
+
+    // Округлення суми
+    roundPrice(hryvnias, kopecks);
+
+    // Вивід округленої суми
+    std::cout << "Округлена сума: " << hryvnias << " грн " << kopecks << " коп." << std::endl;
 
     return 0;
 }
