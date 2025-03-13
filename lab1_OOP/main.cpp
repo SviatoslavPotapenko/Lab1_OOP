@@ -1,9 +1,7 @@
 #include <iostream>
 #include <string>
 
-// Оголошення функцій
-void calculateTotalPrice(const std::string& filename, int& hryvnias, short& kopecks);
-void roundPrice(int& hryvnias, short& kopecks);
+#include "lab1.h"
 
 int main() {
     int hryvnias;
