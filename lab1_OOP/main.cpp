@@ -1,23 +1,52 @@
 #include <iostream>
-#include <string>
+#include <fstream>
+#include "price.h"
 
-#include "lab1.h"
+using namespace std;
 
 int main() {
-    int hryvnias;
-    short kopecks;
+#ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+#endif
 
-    // Обчислення загальної вартості
-    calculateTotalPrice("prices.txt", hryvnias, kopecks);
+    int totalHryvnia = 0, totalKopiykas = 0;
+    string inputMethod;
+    cout << "Enter 'file' to read from data.txt or 'console' to enter data manually: ";
+    cin >> inputMethod;
 
-    // Вивід загальної суми
-    std::cout << "Загальна сума: " << hryvnias << " грн " << kopecks << " коп." << std::endl;
+    ifstream inputFile;
+    bool useFile = (inputMethod == "file");
+    if (useFile) {
+        inputFile.open("data.txt");
+        if (!inputFile) {
+            cerr << "Error opening file. Switching to manual input." << endl;
+            useFile = false;
+        } else {
+            cout << "Reading data from data.txt..." << endl;
+        }
+    }
 
-    // Округлення суми
-    roundPrice(hryvnias, kopecks);
+    if (!useFile) {
+        cout << "Enter data in the format: hryvnia kopiykas quantity (for example: 19 89 3)." << endl;
+        cout << "To finish, use an incorrect format." << endl;
+    }
 
-    // Вивід округленої суми
-    std::cout << "Округлена сума: " << hryvnias << " грн " << kopecks << " коп." << std::endl;
+    int h, k, quantity;
+    while ((useFile ? inputFile : cin) >> h >> k >> quantity) {
+        int itemHryvnia, itemKopiykas;
+        multiplyPrices(h, k, quantity, itemHryvnia, itemKopiykas);
+        addPrices(totalHryvnia, totalKopiykas, itemHryvnia, itemKopiykas, totalHryvnia, totalKopiykas);
+    }
+
+    if (useFile) {
+        inputFile.close();
+    }
+
+    int roundedHryvnia = totalHryvnia, roundedKopiykas = totalKopiykas;
+    roundToNatBank(roundedHryvnia, roundedKopiykas);
+
+    cout << "\nTotal price: " << totalHryvnia << " hryvnia " << totalKopiykas << " kopiykas" << endl;
+    cout << "Rounded price: " << roundedHryvnia << " hryvnia " << roundedKopiykas << " kopiykas" << endl;
 
     return 0;
 }
