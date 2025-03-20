@@ -1,12 +1,17 @@
+#ifndef PRICE_H
+#define PRICE_H
+
 #include <iostream>
 #include <cmath>
 
 struct Price {
-    int hrn;
-    int kop;
+    int hryvnias;
+    short kopecks;
 };
 
-void normal(int& hrn, int& kop);
-void addPrices(int h1, int k1, int h2, int k2, int& resultH, int& resultK);
-void multiplyPrices(int h, int k, double multiplier, int& resultH, int& resultK);
-void roundToNatBank(int& hrn, int& kop);
+void adjustValues(int& hryvnias, short& kopecks);
+void sumCosts(Price& total, const Price& additional);
+void multiplyCost(Price& price, double factor);
+void roundToBankRules(int& hryvnias, short& kopecks);
+
+#endif // PRICE_H
