@@ -9,44 +9,32 @@ int main() {
     SetConsoleOutputCP(CP_UTF8);
 #endif
 
-    int totalHryvnia = 0, totalKopiykas = 0;
-    string inputMethod;
-    cout << "Enter 'file' to read from data.txt or 'console' to enter data manually: ";
-    cin >> inputMethod;
+    Price totalAmount = {0, 0}; // Ініціалізація загальної суми
 
-    ifstream inputFile;
-    bool useFile = (inputMethod == "file");
-    if (useFile) {
-        inputFile.open("data.txt");
-        if (!inputFile) {
-            cerr << "Error opening file. Switching to manual input." << endl;
-            useFile = false;
-        } else {
-            cout << "Reading data from data.txt..." << endl;
-        }
+    ifstream fileStream("data.txt");
+    if (!fileStream) {
+        cout << "Помилка: не вдалося відкрити файл data.txt." << endl;
+        return 1; // Завершити програму з кодом помилки
     }
 
-    if (!useFile) {
-        cout << "Enter data in the format: hryvnia kopiykas quantity (for example: 19 89 3)." << endl;
-        cout << "To finish, use an incorrect format." << endl;
+    cout << "Читання даних із файлу data.txt..." << endl;
+
+    int h, quantity;
+    short k;
+
+    while (fileStream >> h >> k >> quantity) {
+        Price itemPrice = {h, k};
+        multiplyCost(itemPrice, quantity);
+        sumCosts(totalAmount, itemPrice);
     }
 
-    int h, k, quantity;
-    while ((useFile ? inputFile : cin) >> h >> k >> quantity) {
-        int itemHryvnia, itemKopiykas;
-        multiplyPrices(h, k, quantity, itemHryvnia, itemKopiykas);
-        addPrices(totalHryvnia, totalKopiykas, itemHryvnia, itemKopiykas, totalHryvnia, totalKopiykas);
-    }
+    fileStream.close();
 
-    if (useFile) {
-        inputFile.close();
-    }
+    Price roundedAmount = totalAmount;
+    roundToBankRules(roundedAmount.hryvnias, roundedAmount.kopecks);
 
-    int roundedHryvnia = totalHryvnia, roundedKopiykas = totalKopiykas;
-    roundToNatBank(roundedHryvnia, roundedKopiykas);
-
-    cout << "\nTotal price: " << totalHryvnia << " hryvnia " << totalKopiykas << " kopiykas" << endl;
-    cout << "Rounded price: " << roundedHryvnia << " hryvnia " << roundedKopiykas << " kopiykas" << endl;
+    cout << "\nЗагальна сума: " << totalAmount.hryvnias << " грн " << totalAmount.kopecks << " коп." << endl;
+    cout << "Округлена сума: " << roundedAmount.hryvnias << " грн " << roundedAmount.kopecks << " коп." << endl;
 
     return 0;
 }
